@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import "package:flutter_task/widgets/feature_cards.dart";
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
   @override
   Widget build(BuildContext context) {
+    List<String> apiData = ["This", "is", "my", "project"];
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 80, // Increase height if needed
@@ -63,7 +65,46 @@ class HomeScreen extends StatelessWidget {
           ),
         ),
       ),
-      body: const Center(child: Text("Welcome to Home screen")),
+      body: Padding(
+        padding: const EdgeInsets.only(top: 20.0, left: 16.0, right: 16.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Column(
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Featured",
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  width: double.infinity,
+                  height: 172, // Give a fixed height
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: 4,
+                    itemBuilder: (context, index) {
+                      return Padding(
+                        padding: const EdgeInsets.only(
+                          right: 10,
+                        ), // Add spacing
+                        child: FeatureCards(title: apiData[index]),
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
