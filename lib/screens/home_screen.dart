@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import "package:flutter_task/widgets/feature_cards.dart";
+import "package:flutter_task/widgets/category_select.dart";
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -68,7 +69,7 @@ class HomeScreen extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.only(top: 20.0, left: 16.0, right: 16.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Column(
               children: [
@@ -101,6 +102,42 @@ class HomeScreen extends StatelessWidget {
                   ),
                 ),
               ],
+            ),
+            Padding(
+              padding: EdgeInsets.only(top: 40),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
+                    children: [
+                      Text(
+                        "Category",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+
+                      Container(
+                        margin: EdgeInsets.only(right: 12),
+                        child: Text(
+                          "See All",
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w800,
+                            color: Color(0xFF70B9BE),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 20),
+                    child: Row(children: [CategorySelect()]),
+                  ),
+                ],
+              ),
             ),
           ],
         ),
