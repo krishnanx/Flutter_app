@@ -85,20 +85,23 @@ class HomeScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-                SizedBox(
-                  width: double.infinity,
-                  height: 172, // Give a fixed height
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: 4,
-                    itemBuilder: (context, index) {
-                      return Padding(
-                        padding: const EdgeInsets.only(
-                          right: 10,
-                        ), // Add spacing
-                        child: FeatureCards(title: apiData[index]),
-                      );
-                    },
+                Padding(
+                  padding: EdgeInsets.only(top: 10),
+                  child: SizedBox(
+                    width: double.infinity,
+                    height: 172, // Give a fixed height
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: 4,
+                      itemBuilder: (context, index) {
+                        return Padding(
+                          padding: const EdgeInsets.only(
+                            right: 10,
+                          ), // Add spacing
+                          child: FeatureCards(title: apiData[index]),
+                        );
+                      },
+                    ),
                   ),
                 ),
               ],
