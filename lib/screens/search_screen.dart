@@ -1,19 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_task/widgets/search.dart';
 import 'package:flutter_task/widgets/category_select.dart';
+import 'package:flutter_task/widgets/popular_search.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import "package:flutter_task/providers/product_providers.dart";
 
-class SearchScreen extends StatefulWidget {
+class SearchScreen extends ConsumerStatefulWidget {
   const SearchScreen({super.key});
 
   @override
-  State<SearchScreen> createState() => _SearchScreenState();
+  ConsumerState<SearchScreen> createState() => _SearchScreenState();
 }
 
-class _SearchScreenState extends State<SearchScreen> {
+class _SearchScreenState extends ConsumerState<SearchScreen> {
   String selectedCategory = "electronics";
 
   @override
   Widget build(BuildContext context) {
+    final popularProducts = ref.watch(
+      categoryProductProvider(selectedCategory),
+    );
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 80,
@@ -33,7 +39,7 @@ class _SearchScreenState extends State<SearchScreen> {
         ),
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
+        padding: const EdgeInsets.symmetric(horizontal: 18.0, vertical: 20.0),
         child: Column(
           children: [
             SizedBox(
@@ -57,6 +63,47 @@ class _SearchScreenState extends State<SearchScreen> {
                     },
                   ),
                 ],
+              ),
+            ),
+            SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: const [
+                Text(
+                  "Popular Products",
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
+                ),
+
+                Text(
+                  "View All",
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w800,
+                    color: Color(0xFF70B9BE),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 174,
+
+              child: popularProducts.when(
+                data:
+                    (products) => ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: 3,
+                      itemBuilder: (context, index) {
+                        return Padding(
+                          padding: const EdgeInsets.only(right: 10),
+                          child: PopularSearch(
+                            title: products[index].title,
+                            image: products[index].image,
+                          ),
+                        );
+                      },
+                    ),
+                loading: () => const Center(child: CircularProgressIndicator()),
+                error: (err, stack) => Center(child: Text("Error: $err")),
               ),
             ),
           ],
