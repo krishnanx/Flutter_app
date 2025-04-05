@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_task/screens/home_screen.dart';
 import 'package:flutter_task/screens/profile_screen.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_task/screens/search_screen.dart';
+import 'package:flutter_task/screens/bell_screen.dart';
 
 class MainTabScreen extends StatefulWidget {
   const MainTabScreen({super.key});
@@ -13,7 +15,12 @@ class MainTabScreen extends StatefulWidget {
 class _MainTabScreenState extends State<MainTabScreen> {
   int _currentIndex = 0;
 
-  final List<Widget> _tabs = [HomeScreen(), ProfileScreen()];
+  final List<Widget> _tabs = [
+    HomeScreen(),
+    SearchScreen(),
+    BellScreen(),
+    ProfileScreen(),
+  ];
 
   @override
   Widget build(BuildContext context) {
