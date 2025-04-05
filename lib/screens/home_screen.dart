@@ -77,7 +77,7 @@ class HomeScreen extends ConsumerWidget {
             top: 20.0,
             left: 16.0,
             right: 16.0,
-            bottom: 20,
+            bottom: 30,
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -197,7 +197,7 @@ class HomeScreen extends ConsumerWidget {
                       padding: EdgeInsets.only(top: 10),
 
                       child: SizedBox(
-                        height: 300,
+                        height: 320,
                         child: PopularProducts.when(
                           data:
                               (products) => ListView.builder(

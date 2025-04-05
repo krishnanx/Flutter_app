@@ -24,7 +24,7 @@ class PopularCards extends StatelessWidget {
       child: Column(
         children: [
           Padding(
-            padding: EdgeInsets.only(left: 10),
+            padding: EdgeInsets.only(left: 10, right: 5),
             child: Column(
               children: [
                 Align(
