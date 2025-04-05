@@ -7,22 +7,33 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import "package:flutter_task/providers/product_providers.dart";
 import "package:flutter_task/widgets/popular_cards.dart";
 
-class HomeScreen extends ConsumerWidget {
+class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
+
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends ConsumerState<HomeScreen> {
+  String selectedCategory = "electronics";
+
+  @override
+  Widget build(BuildContext context) {
     final featuredProducts = ref.watch(featuredProductsProvider);
-    final PopularProducts = ref.watch(popularProductProvider);
+    final popularProducts = ref.watch(
+      categoryProductProvider(selectedCategory),
+    );
+
     return Scaffold(
       appBar: AppBar(
-        toolbarHeight: 80, // Increase height if needed
-
+        toolbarHeight: 80,
         flexibleSpace: SafeArea(
           child: Padding(
             padding: const EdgeInsets.only(top: 20.0, left: 16.0, right: 16.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
+                // User greeting
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -35,201 +46,142 @@ class HomeScreen extends ConsumerWidget {
                             height: 18,
                           ),
                           const SizedBox(width: 5),
-                          Text(
+                          const Text(
                             "Good Morning",
-                            textAlign: TextAlign.center,
                             style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w400,
                             ),
-                          ), // Bold text),
+                          ),
                         ],
                       ),
                     ),
-                    Text(
+                    const Text(
                       "Krishnan E",
                       style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.w800,
                       ),
                     ),
-                    const SizedBox(width: 10),
                   ],
                 ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SvgPicture.asset(
-                      'assets/icons/Buy.svg',
-                      width: 24,
-                      height: 24,
-                    ),
-                  ],
-                ),
+
+                // Cart Icon
+                SvgPicture.asset('assets/icons/Buy.svg', width: 24, height: 24),
               ],
             ),
           ),
         ),
       ),
+
+      // Body
       body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.only(
-            top: 20.0,
-            left: 16.0,
-            right: 16.0,
-            bottom: 30,
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Column(
-                children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Featured",
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w800,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 10),
-
-                    child: SizedBox(
-                      height: 172,
-                      child: featuredProducts.when(
-                        data:
-                            (products) => ListView.builder(
-                              scrollDirection: Axis.horizontal,
-                              itemCount: products.length,
-                              itemBuilder: (context, index) {
-                                return Padding(
-                                  padding: const EdgeInsets.only(right: 10),
-                                  child: FeatureCards(
-                                    title: products[index].title,
-                                    image: products[index].image,
-                                  ),
-                                );
-                              },
-                            ),
-
-                        loading:
-                            () => const Center(
-                              child: CircularProgressIndicator(),
-                            ),
-                        error:
-                            (err, stack) => Center(child: Text("Error: $err")),
-                      ),
+        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Featured section
+            const Text(
+              "Featured",
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
+            ),
+            const SizedBox(height: 10),
+            SizedBox(
+              height: 172,
+              child: featuredProducts.when(
+                data:
+                    (products) => ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: products.length,
+                      itemBuilder: (context, index) {
+                        return Padding(
+                          padding: const EdgeInsets.only(right: 10),
+                          child: FeatureCards(
+                            title: products[index].title,
+                            image: products[index].image,
+                          ),
+                        );
+                      },
                     ),
-                  ),
-                ],
+                loading: () => const Center(child: CircularProgressIndicator()),
+                error: (err, stack) => Center(child: Text("Error: $err")),
               ),
-              Padding(
-                padding: EdgeInsets.only(top: 40),
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            ),
 
-                      children: [
-                        Text(
-                          "Category",
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w800,
-                          ),
-                        ),
+            const SizedBox(height: 40),
 
-                        Container(
-                          margin: EdgeInsets.only(right: 12),
-                          child: Text(
-                            "See All",
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w800,
-                              color: Color(0xFF70B9BE),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 10),
-                      child: Row(children: [CategorySelect()]),
-                    ),
-                  ],
+            // Category section
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: const [
+                Text(
+                  "Category",
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
                 ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: 30),
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
-                      children: [
-                        Text(
-                          "Popular Products",
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w800,
-                          ),
-                        ),
-
-                        Container(
-                          margin: EdgeInsets.only(right: 12),
-                          child: Text(
-                            "See All",
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w800,
-                              color: Color(0xFF70B9BE),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 10),
-
-                      child: SizedBox(
-                        height: 320,
-                        child: PopularProducts.when(
-                          data:
-                              (products) => ListView.builder(
-                                scrollDirection: Axis.horizontal,
-                                itemCount: products.length,
-                                itemBuilder: (context, index) {
-                                  return Padding(
-                                    padding: const EdgeInsets.only(right: 10),
-                                    child: PopularCards(
-                                      title: products[index].title,
-                                      image: products[index].image,
-                                      price: products[index].price,
-                                    ),
-                                  );
-                                },
-                              ),
-
-                          loading:
-                              () => const Center(
-                                child: CircularProgressIndicator(),
-                              ),
-                          error:
-                              (err, stack) =>
-                                  Center(child: Text("Error: $err")),
-                        ),
-                      ),
-                    ),
-                  ],
+                Text(
+                  "See All",
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w800,
+                    color: Color(0xFF70B9BE),
+                  ),
                 ),
+              ],
+            ),
+            const SizedBox(height: 10),
+            CategorySelect(
+              onCategorySelected: (category) {
+                setState(() {
+                  selectedCategory = category;
+                });
+                print("Selected category: $selectedCategory");
+              },
+            ),
+
+            const SizedBox(height: 30),
+
+            // Popular Products section
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: const [
+                Text(
+                  "Popular Products",
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
+                ),
+                Text(
+                  "See All",
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w800,
+                    color: Color(0xFF70B9BE),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
+            SizedBox(
+              height: 320,
+              child: popularProducts.when(
+                data:
+                    (products) => ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: products.length,
+                      itemBuilder: (context, index) {
+                        return Padding(
+                          padding: const EdgeInsets.only(right: 10),
+                          child: PopularCards(
+                            title: products[index].title,
+                            image: products[index].image,
+                            price: products[index].price,
+                          ),
+                        );
+                      },
+                    ),
+                loading: () => const Center(child: CircularProgressIndicator()),
+                error: (err, stack) => Center(child: Text("Error: $err")),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

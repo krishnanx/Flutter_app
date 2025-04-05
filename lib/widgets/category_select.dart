@@ -1,19 +1,31 @@
 import 'package:flutter/material.dart';
 
 class CategorySelect extends StatefulWidget {
+  final void Function(String selectedCategory) onCategorySelected;
+
+  const CategorySelect({super.key, required this.onCategorySelected});
+
   @override
   _CategorySelectState createState() => _CategorySelectState();
 }
 
 class _CategorySelectState extends State<CategorySelect> {
-  int selectedIndex = 0; // Track selected button index
+  int selectedIndex = 0;
 
   final List<String> category = ["electronics", "jewelery", "men's clothing"];
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      widget.onCategorySelected(category[selectedIndex]);
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.start, // Align to the left
+      mainAxisAlignment: MainAxisAlignment.start,
       children: List.generate(category.length, (index) {
         bool isSelected = selectedIndex == index;
 
@@ -22,10 +34,11 @@ class _CategorySelectState extends State<CategorySelect> {
             setState(() {
               selectedIndex = index;
             });
+            widget.onCategorySelected(category[index]);
           },
           child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-            margin: EdgeInsets.only(right: 7.1),
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            margin: const EdgeInsets.only(right: 7.1),
             decoration: BoxDecoration(
               color: isSelected ? Colors.teal : Colors.grey[200],
               borderRadius: BorderRadius.circular(20),

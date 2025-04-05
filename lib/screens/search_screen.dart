@@ -1,8 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_task/widgets/search.dart';
+import 'package:flutter_task/widgets/category_select.dart';
 
-class SearchScreen extends StatelessWidget {
+class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
+
+  @override
+  State<SearchScreen> createState() => _SearchScreenState();
+}
+
+class _SearchScreenState extends State<SearchScreen> {
+  String selectedCategory = "electronics";
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -12,8 +21,8 @@ class SearchScreen extends StatelessWidget {
           child: Stack(
             alignment: Alignment.center,
             children: [
-              Align(alignment: Alignment.centerLeft, child: BackButton()),
-              Center(
+              const Align(alignment: Alignment.centerLeft, child: BackButton()),
+              const Center(
                 child: Text(
                   "Search",
                   style: TextStyle(fontSize: 24, fontWeight: FontWeight.w700),
@@ -24,28 +33,28 @@ class SearchScreen extends StatelessWidget {
         ),
       ),
       body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.only(
-            top: 20.0,
-            left: 16.0,
-            right: 16.0,
-            bottom: 30,
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.9,
-                    height: 55,
-                    child: Search(),
-                  ),
-                ],
-              ),
-            ],
-          ),
+        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
+        child: Column(
+          children: [
+            SizedBox(
+              width: MediaQuery.of(context).size.width * 0.9,
+              height: 55,
+              child: const Search(),
+            ),
+            const SizedBox(height: 20),
+
+            // Category Select with callback
+            CategorySelect(
+              onCategorySelected: (category) {
+                setState(() {
+                  selectedCategory = category;
+                });
+
+                // Optional: Add search/filter logic here using selectedCategory
+                print("Selected category: $selectedCategory");
+              },
+            ),
+          ],
         ),
       ),
     );
