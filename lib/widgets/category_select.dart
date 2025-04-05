@@ -12,7 +12,12 @@ class CategorySelect extends StatefulWidget {
 class _CategorySelectState extends State<CategorySelect> {
   int selectedIndex = 0;
 
-  final List<String> category = ["electronics", "jewelery", "men's clothing"];
+  final List<String> category = [
+    "electronics",
+    "jewelery",
+    "men's clothing",
+    "womens's clothing",
+  ];
 
   @override
   void initState() {

@@ -129,13 +129,20 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               ],
             ),
             const SizedBox(height: 10),
-            CategorySelect(
-              onCategorySelected: (category) {
-                setState(() {
-                  selectedCategory = category;
-                });
-                print("Selected category: $selectedCategory");
-              },
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: [
+                  CategorySelect(
+                    onCategorySelected: (category) {
+                      setState(() {
+                        selectedCategory = category;
+                      });
+                      print("Selected category: $selectedCategory");
+                    },
+                  ),
+                ],
+              ),
             ),
 
             const SizedBox(height: 30),

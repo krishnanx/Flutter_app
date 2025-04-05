@@ -44,15 +44,20 @@ class _SearchScreenState extends State<SearchScreen> {
             const SizedBox(height: 20),
 
             // Category Select with callback
-            CategorySelect(
-              onCategorySelected: (category) {
-                setState(() {
-                  selectedCategory = category;
-                });
-
-                // Optional: Add search/filter logic here using selectedCategory
-                print("Selected category: $selectedCategory");
-              },
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: [
+                  CategorySelect(
+                    onCategorySelected: (category) {
+                      setState(() {
+                        selectedCategory = category;
+                      });
+                      print("Selected category: $selectedCategory");
+                    },
+                  ),
+                ],
+              ),
             ),
           ],
         ),
