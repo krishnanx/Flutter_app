@@ -5,8 +5,37 @@ class SearchScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Search")),
-      body: const Center(child: Text("Welcome to Search screen")),
+      appBar: AppBar(
+        toolbarHeight: 80,
+        flexibleSpace: SafeArea(
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              Align(alignment: Alignment.centerLeft, child: BackButton()),
+              Center(
+                child: Text(
+                  "Search",
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.w700),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.only(
+            top: 20.0,
+            left: 16.0,
+            right: 16.0,
+            bottom: 30,
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [],
+          ),
+        ),
+      ),
     );
   }
 }
