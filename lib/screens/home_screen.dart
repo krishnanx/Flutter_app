@@ -3,14 +3,13 @@ import 'package:flutter_svg/flutter_svg.dart';
 import "package:flutter_task/widgets/feature_cards.dart";
 import "package:flutter_task/widgets/category_select.dart";
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_task/services/product_api.dart';
+
 import "package:flutter_task/providers/product_providers.dart";
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    List<String> apiData = ["This", "is", "my", "project"];
     final featuredProducts = ref.watch(featuredProductsProvider);
     return Scaffold(
       appBar: AppBar(
@@ -104,6 +103,7 @@ class HomeScreen extends ConsumerWidget {
                                 padding: const EdgeInsets.only(right: 10),
                                 child: FeatureCards(
                                   title: products[index].title,
+                                  image: products[index].image,
                                 ),
                               );
                             },
