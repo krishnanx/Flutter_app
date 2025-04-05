@@ -2,12 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import "package:flutter_task/widgets/feature_cards.dart";
 import "package:flutter_task/widgets/category_select.dart";
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_task/services/product_api.dart';
+import "package:flutter_task/providers/product_providers.dart";
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     List<String> apiData = ["This", "is", "my", "project"];
+    final featuredProducts = ref.watch(featuredProductsProvider);
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 80, // Increase height if needed
@@ -87,20 +91,28 @@ class HomeScreen extends StatelessWidget {
                 ),
                 Padding(
                   padding: EdgeInsets.only(top: 10),
+
                   child: SizedBox(
-                    width: double.infinity,
-                    height: 172, // Give a fixed height
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: 4,
-                      itemBuilder: (context, index) {
-                        return Padding(
-                          padding: const EdgeInsets.only(
-                            right: 10,
-                          ), // Add spacing
-                          child: FeatureCards(title: apiData[index]),
-                        );
-                      },
+                    height: 172,
+                    child: featuredProducts.when(
+                      data:
+                          (products) => ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: products.length,
+                            itemBuilder: (context, index) {
+                              return Padding(
+                                padding: const EdgeInsets.only(right: 10),
+                                child: FeatureCards(
+                                  title: products[index].title,
+                                ),
+                              );
+                            },
+                          ),
+
+                      loading:
+                          () =>
+                              const Center(child: CircularProgressIndicator()),
+                      error: (err, stack) => Center(child: Text("Error: $err")),
                     ),
                   ),
                 ),

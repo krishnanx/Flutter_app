@@ -8,13 +8,13 @@ class CategorySelect extends StatefulWidget {
 class _CategorySelectState extends State<CategorySelect> {
   int selectedIndex = 0; // Track selected button index
 
-  final List<String> meals = ["Breakfast", "Lunch", "Dinner"];
+  final List<String> category = ["electronics", "jewelery", "men's clothing"];
 
   @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start, // Align to the left
-      children: List.generate(meals.length, (index) {
+      children: List.generate(category.length, (index) {
         bool isSelected = selectedIndex == index;
 
         return GestureDetector(
@@ -24,14 +24,14 @@ class _CategorySelectState extends State<CategorySelect> {
             });
           },
           child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-            margin: EdgeInsets.only(right: 12),
+            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            margin: EdgeInsets.only(right: 7.1),
             decoration: BoxDecoration(
               color: isSelected ? Colors.teal : Colors.grey[200],
               borderRadius: BorderRadius.circular(20),
             ),
             child: Text(
-              meals[index],
+              category[index],
               style: TextStyle(
                 color: isSelected ? Colors.white : Colors.black,
                 fontWeight: FontWeight.w600,
