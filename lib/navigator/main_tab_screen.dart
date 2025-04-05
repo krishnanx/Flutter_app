@@ -28,6 +28,9 @@ class _MainTabScreenState extends State<MainTabScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.teal,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(40), // Adjust radius as needed
+        ),
         onPressed: () {},
         child: Icon(Icons.restaurant_menu, color: Colors.white),
       ),
