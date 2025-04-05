@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_task/widgets/search.dart';
 
 class SearchScreen extends StatelessWidget {
   const SearchScreen({super.key});
@@ -32,7 +33,18 @@ class SearchScreen extends StatelessWidget {
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
-            children: [],
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.9,
+                    height: 55,
+                    child: Search(),
+                  ),
+                ],
+              ),
+            ],
           ),
         ),
       ),
