@@ -16,7 +16,7 @@ class _CategorySelectState extends State<CategorySelect> {
     "electronics",
     "jewelery",
     "men's clothing",
-    "womens's clothing",
+    "women's clothing",
   ];
 
   @override

@@ -18,7 +18,8 @@ final categoryProductProvider = FutureProvider.family<List<Product>, String>((
 ) async {
   final api = ref.read(_productApiProvider);
   final categoryProducts = await api.fetchProductsByCategory(category);
-  return categoryProducts;
+  categoryProducts.shuffle();
+  return categoryProducts.take(4).toList();
 });
 
 final popularProductProvider = FutureProvider<List<Product>>((ref) async {
