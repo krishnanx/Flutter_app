@@ -144,6 +144,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                             child: EditorsChoice(
                               title: products[index].title,
                               image: products[index].image,
+                              desc: products[index].description,
                               onTap: () {
                                 Navigator.push(
                                   context,

@@ -4,12 +4,14 @@ import 'package:flutter_task/widgets/next_button.dart';
 class EditorsChoice extends StatelessWidget {
   final String title;
   final String image;
+  final String desc;
   final VoidCallback onTap;
 
   const EditorsChoice({
     super.key,
     required this.title,
     required this.image,
+    required this.desc,
     required this.onTap,
   });
 
