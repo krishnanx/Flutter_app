@@ -5,6 +5,7 @@ import 'package:flutter_task/widgets/popular_search.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import "package:flutter_task/providers/product_providers.dart";
 import 'package:flutter_task/widgets/editors_choice.dart';
+import 'package:flutter_task/screens/details_screen.dart';
 
 class SearchScreen extends ConsumerStatefulWidget {
   const SearchScreen({super.key});
@@ -143,6 +144,17 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                             child: EditorsChoice(
                               title: products[index].title,
                               image: products[index].image,
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder:
+                                        (_) => DetailsScreen(
+                                          product: products[index],
+                                        ),
+                                  ),
+                                );
+                              },
                             ),
                           );
                         },
