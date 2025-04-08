@@ -4,7 +4,7 @@ import "package:flutter_task/screens/cart.dart";
 import "package:flutter_task/widgets/feature_cards.dart";
 import "package:flutter_task/widgets/category_select.dart";
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
+import '../screens/details_screen.dart';
 import "package:flutter_task/providers/product_providers.dart";
 import "package:flutter_task/widgets/popular_cards.dart";
 
@@ -190,7 +190,20 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       itemBuilder: (context, index) {
                         return Padding(
                           padding: const EdgeInsets.only(right: 10),
-                          child: PopularCards(product: products[index]),
+                          child: PopularCards(
+                            product: products[index],
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder:
+                                      (_) => DetailsScreen(
+                                        product: products[index],
+                                      ),
+                                ),
+                              );
+                            },
+                          ),
                         );
                       },
                     ),
