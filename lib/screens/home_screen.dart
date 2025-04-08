@@ -113,6 +113,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           child: FeatureCards(
                             title: products[index].title,
                             image: products[index].image,
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder:
+                                      (_) => DetailsScreen(
+                                        product: products[index],
+                                      ),
+                                ),
+                              );
+                            },
                           ),
                         );
                       },
