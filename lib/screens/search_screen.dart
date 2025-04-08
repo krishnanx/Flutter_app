@@ -115,6 +115,16 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                         child: PopularSearch(
                           title: products[index].title,
                           image: products[index].image,
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder:
+                                    (_) =>
+                                        DetailsScreen(product: products[index]),
+                              ),
+                            );
+                          },
                         ),
                       );
                     },
