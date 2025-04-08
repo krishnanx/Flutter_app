@@ -9,7 +9,7 @@ class CartNotifier extends StateNotifier<List<CartItem>> {
     );
     if (index != -1) {
       final updated = [...state];
-      updated[index].quantity++;
+      updated[index].quantity += product.quantity;
       state = updated;
     } else {
       state = [...state, product];

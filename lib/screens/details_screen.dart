@@ -200,7 +200,10 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                 children: [
                                   Buynow(),
                                   Button(
-                                    item: CartItem(product: widget.product),
+                                    item: CartItem(
+                                      product: widget.product,
+                                      quantity: quantity,
+                                    ),
                                   ),
                                 ],
                               ),
