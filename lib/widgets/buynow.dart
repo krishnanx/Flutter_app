@@ -13,7 +13,7 @@ class Buynow extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
         decoration: BoxDecoration(
-          color: Colors.teal,
+          color: Color(0xFF37A99B),
           borderRadius: BorderRadius.circular(20),
         ),
         child: Text(

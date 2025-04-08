@@ -1,61 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_task/models/cart_item.dart';
+import '../providers/cart_providers.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
-class Cart extends StatefulWidget {
+class Cart extends ConsumerStatefulWidget {
   const Cart({Key? key}) : super(key: key);
 
   @override
-  State<Cart> createState() => _CartState();
+  ConsumerState<Cart> createState() => _CartState();
 }
 
-class _CartState extends State<Cart> {
+class _CartState extends ConsumerState<Cart> {
   // Sample cart data - you would typically get this from a provider or state management solution
-  final List<CartItem> _cartItems = [
-    CartItem(
-      id: '1',
-      name: 'Healthy Taco Salad',
-      chef: 'James Spader',
-      price: 12.99,
-      quantity: 1,
-      imageUrl: 'assets/images/taco_salad.jpg',
-    ),
-    CartItem(
-      id: '2',
-      name: 'Japanese-style Pancakes',
-      chef: 'Olivia Park',
-      price: 9.99,
-      quantity: 2,
-      imageUrl: 'assets/images/japanese_pancakes.jpg',
-    ),
-    CartItem(
-      id: '3',
-      name: 'Egg & Avocado Toast',
-      chef: 'Alice Fola',
-      price: 8.50,
-      quantity: 1,
-      imageUrl: 'assets/images/avocado_toast.jpg',
-    ),
-  ];
-
-  double get subtotal =>
-      _cartItems.fold(0, (sum, item) => sum + (item.price * item.quantity));
-  double get deliveryFee => 2.99;
-  double get taxes => subtotal * 0.10; // Assuming 10% tax rate
-  double get total => subtotal + deliveryFee + taxes;
-
-  void _updateQuantity(String id, int change) {
-    setState(() {
-      final index = _cartItems.indexWhere((item) => item.id == id);
-      if (index != -1) {
-        _cartItems[index].quantity += change;
-        if (_cartItems[index].quantity <= 0) {
-          _cartItems.removeAt(index);
-        }
-      }
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
+    final cartItems = ref.watch(cartProvider);
+
+    final subtotal = cartItems.fold(
+      0.0,
+      (sum, item) => sum + (item.product.price * item.quantity),
+    );
+    final deliveryFee = 4.99;
+    final taxes = subtotal * 0.08;
+    final total = subtotal + deliveryFee + taxes;
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -76,12 +45,17 @@ class _CartState extends State<Cart> {
         ),
       ),
       body:
-          _cartItems.isEmpty
+          cartItems.isEmpty
               ? _buildEmptyCart()
               : Column(
                 children: [
                   Expanded(child: _buildCartItemsList()),
-                  _buildOrderSummary(),
+                  _buildOrderSummary(
+                    subtotal: subtotal,
+                    deliveryFee: deliveryFee,
+                    taxes: taxes,
+                    total: total,
+                  ),
                 ],
               ),
     );
@@ -140,11 +114,12 @@ class _CartState extends State<Cart> {
   }
 
   Widget _buildCartItemsList() {
+    final cartItems = ref.watch(cartProvider);
     return ListView.builder(
       padding: const EdgeInsets.symmetric(horizontal: 16),
-      itemCount: _cartItems.length,
+      itemCount: cartItems.length,
       itemBuilder: (context, index) {
-        final item = _cartItems[index];
+        final item = cartItems[index];
         return _buildCartItem(item);
       },
     );
@@ -165,21 +140,7 @@ class _CartState extends State<Cart> {
             child: SizedBox(
               width: 80,
               height: 80,
-              child: Image.asset(
-                item.imageUrl,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) {
-                  // Fallback for missing images
-                  return Container(
-                    color: Colors.grey[300],
-                    child: Icon(
-                      Icons.restaurant,
-                      color: Colors.grey[400],
-                      size: 30,
-                    ),
-                  );
-                },
-              ),
+              child: Image.network(item.product.image, fit: BoxFit.fill),
             ),
           ),
           const SizedBox(width: 16),
@@ -189,23 +150,20 @@ class _CartState extends State<Cart> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  item.name,
+                  item.product.title,
                   style: const TextStyle(
                     fontWeight: FontWeight.w600,
                     fontSize: 16,
                   ),
                 ),
                 const SizedBox(height: 4),
-                Text(
-                  item.chef,
-                  style: TextStyle(fontSize: 13, color: Colors.grey[600]),
-                ),
+
                 const SizedBox(height: 12),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      '\$${item.price.toStringAsFixed(2)}',
+                      '\$${item.product.price}',
                       style: const TextStyle(
                         fontWeight: FontWeight.w700,
                         fontSize: 16,
@@ -214,8 +172,15 @@ class _CartState extends State<Cart> {
                     Row(
                       children: [
                         _buildQuantityButton(
-                          icon: Icons.remove,
-                          onPressed: () => _updateQuantity(item.id, -1),
+                          icon: SvgPicture.asset(
+                            'assets/icons/minus.svg',
+                            width: 24,
+                            height: 24,
+                          ),
+                          onPressed:
+                              () => ref
+                                  .read(cartProvider.notifier)
+                                  .decreaseNumber(item),
                         ),
                         const SizedBox(width: 12),
                         Text(
@@ -227,8 +192,15 @@ class _CartState extends State<Cart> {
                         ),
                         const SizedBox(width: 12),
                         _buildQuantityButton(
-                          icon: Icons.add,
-                          onPressed: () => _updateQuantity(item.id, 1),
+                          icon: SvgPicture.asset(
+                            'assets/icons/plus.svg',
+                            width: 24,
+                            height: 24,
+                          ),
+                          onPressed:
+                              () => ref
+                                  .read(cartProvider.notifier)
+                                  .increaseNumber(item),
                         ),
                       ],
                     ),
@@ -243,24 +215,22 @@ class _CartState extends State<Cart> {
   }
 
   Widget _buildQuantityButton({
-    required IconData icon,
+    required Widget icon,
     required VoidCallback onPressed,
   }) {
     return InkWell(
       onTap: onPressed,
-      child: Container(
-        width: 28,
-        height: 28,
-        decoration: BoxDecoration(
-          color: Colors.grey[200],
-          borderRadius: BorderRadius.circular(14),
-        ),
-        child: Icon(icon, size: 16, color: Colors.black),
-      ),
+      borderRadius: BorderRadius.circular(14),
+      child: Container(width: 28, height: 28, child: icon),
     );
   }
 
-  Widget _buildOrderSummary() {
+  Widget _buildOrderSummary({
+    required double subtotal,
+    required double deliveryFee,
+    required double taxes,
+    required double total,
+  }) {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
@@ -311,7 +281,11 @@ class _CartState extends State<Cart> {
               ),
               child: const Text(
                 'Proceed to Checkout',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white,
+                ),
               ),
             ),
           ),
@@ -332,23 +306,4 @@ class _CartState extends State<Cart> {
       ],
     );
   }
-}
-
-// Model class for cart items
-class CartItem {
-  final String id;
-  final String name;
-  final String chef;
-  final double price;
-  int quantity;
-  final String imageUrl;
-
-  CartItem({
-    required this.id,
-    required this.name,
-    required this.chef,
-    required this.price,
-    required this.quantity,
-    required this.imageUrl,
-  });
 }

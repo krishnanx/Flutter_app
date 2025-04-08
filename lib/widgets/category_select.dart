@@ -45,7 +45,7 @@ class _CategorySelectState extends State<CategorySelect> {
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
             margin: const EdgeInsets.only(right: 7.1),
             decoration: BoxDecoration(
-              color: isSelected ? Colors.teal : Colors.grey[200],
+              color: isSelected ? Color(0xFF37A99B) : Colors.grey[200],
               borderRadius: BorderRadius.circular(20),
             ),
             child: Text(

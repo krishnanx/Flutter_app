@@ -1,16 +1,12 @@
 import "package:flutter/material.dart";
 import "package:flutter_task/widgets/button.dart";
+import '../models/product.dart';
+import "package:flutter_task/models/cart_item.dart";
 
 class PopularCards extends StatelessWidget {
-  final String title;
-  final String image;
-  final double price;
-  const PopularCards({
-    super.key,
-    required this.title,
-    required this.image,
-    required this.price,
-  });
+  final Product product;
+
+  const PopularCards({super.key, required this.product});
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -34,7 +30,7 @@ class PopularCards extends StatelessWidget {
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(15),
                       child: Image.network(
-                        image,
+                        product.image,
                         width: 168,
                         height: 128,
                         fit: BoxFit.fill,
@@ -50,7 +46,7 @@ class PopularCards extends StatelessWidget {
                     child: Padding(
                       padding: EdgeInsets.only(top: 20),
                       child: Text(
-                        title,
+                        product.title,
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w800,
@@ -68,7 +64,7 @@ class PopularCards extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "Cost: \$$price",
+                            "Cost: \$${product.price}",
                             style: TextStyle(
                               fontSize: 15,
                               fontWeight: FontWeight.w500,
@@ -79,7 +75,9 @@ class PopularCards extends StatelessWidget {
 
                       Align(
                         alignment: Alignment.bottomRight,
-                        child: Button(), // Your custom button
+                        child: Button(
+                          item: CartItem(product: product),
+                        ), // Your custom button
                       ),
                     ],
                   ),

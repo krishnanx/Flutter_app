@@ -190,11 +190,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       itemBuilder: (context, index) {
                         return Padding(
                           padding: const EdgeInsets.only(right: 10),
-                          child: PopularCards(
-                            title: products[index].title,
-                            image: products[index].image,
-                            price: products[index].price,
-                          ),
+                          child: PopularCards(product: products[index]),
                         );
                       },
                     ),
