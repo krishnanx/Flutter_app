@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import "package:flutter_task/screens/cart.dart";
 import "package:flutter_task/widgets/feature_cards.dart";
 import "package:flutter_task/widgets/category_select.dart";
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -67,7 +68,20 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 ),
 
                 // Cart Icon
-                SvgPicture.asset('assets/icons/Buy.svg', width: 24, height: 24),
+                GestureDetector(
+                  onTap: () {
+                    // Your action here (e.g., navigate to cart screen)
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => Cart()),
+                    );
+                  },
+                  child: SvgPicture.asset(
+                    'assets/icons/Buy.svg',
+                    width: 24,
+                    height: 24,
+                  ),
+                ),
               ],
             ),
           ),
