@@ -85,10 +85,13 @@ class _CartState extends ConsumerState<Cart> {
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
           ),
           const SizedBox(height: 12),
-          const Text(
-            'Browse our delicious recipes and add some to your cart',
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 15, color: Colors.grey),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 10),
+            child: const Text(
+              'Browse our Products and add some to your cart!',
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 15, color: Colors.grey),
+            ),
           ),
           const SizedBox(height: 24),
           ElevatedButton(
@@ -104,8 +107,12 @@ class _CartState extends ConsumerState<Cart> {
               padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
             ),
             child: const Text(
-              'Browse Recipes',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+              'Browse Products',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+                color: Colors.white,
+              ),
             ),
           ),
         ],
