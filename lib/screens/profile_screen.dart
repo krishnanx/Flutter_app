@@ -137,17 +137,17 @@ Widget _favourites(BuildContext context, List<Product> favoriteProducts) {
     child: GridView.builder(
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
-      padding: EdgeInsets.all(0),
+      padding: EdgeInsets.only(bottom: 0),
       itemCount: favoriteProducts.length,
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
         crossAxisSpacing: 16,
         mainAxisSpacing: 16,
-        childAspectRatio: 0.75,
+        childAspectRatio: 0.72,
       ),
       itemBuilder: (context, index) {
         final item = favoriteProducts[index];
-        return PopularCards(product: item, onTap: () {});
+        return PopularCards(product: item, onTap: () {}, showDetails: false);
       },
     ),
   );

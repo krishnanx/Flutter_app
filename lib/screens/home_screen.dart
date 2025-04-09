@@ -214,6 +214,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                 ),
                               );
                             },
+                            showDetails: true,
                           ),
                         );
                       },

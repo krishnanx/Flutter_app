@@ -9,13 +9,20 @@ import '../providers/favorite_providers.dart';
 class PopularCards extends ConsumerStatefulWidget {
   final Product product;
   final VoidCallback onTap;
-  const PopularCards({super.key, required this.product, required this.onTap});
+  final bool showDetails;
+  const PopularCards({
+    super.key,
+    required this.product,
+    required this.onTap,
+    required this.showDetails,
+  });
   ConsumerState<PopularCards> createState() => _PopularState();
 }
 
 class _PopularState extends ConsumerState<PopularCards> {
   @override
   Widget build(BuildContext context) {
+    final isFav = ref.watch(favoriteProvider).contains(widget.product.id);
     // TODO: implement build
     return GestureDetector(
       onTap: widget.onTap,
@@ -61,9 +68,7 @@ class _PopularState extends ConsumerState<PopularCards> {
                               },
                           child: Container(
                             child:
-                                ref
-                                        .read(favoriteProvider.notifier)
-                                        .isFavorite(widget.product)
+                                isFav
                                     ? SvgPicture.asset(
                                       "assets/icons/Active.svg",
                                       width: 60,
@@ -97,32 +102,34 @@ class _PopularState extends ConsumerState<PopularCards> {
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 10),
-                    child: Column(
-                      children: [
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                  widget.showDetails
+                      ? Padding(
+                        padding: EdgeInsets.only(top: 10),
+                        child: Column(
                           children: [
-                            Text(
-                              "Cost: \$${widget.product.price}",
-                              style: TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.w500,
-                              ),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Cost: \$${widget.product.price}",
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ],
+                            ),
+
+                            Align(
+                              alignment: Alignment.bottomRight,
+                              child: Button(
+                                item: CartItem(product: widget.product),
+                              ), // Your custom button
                             ),
                           ],
                         ),
-
-                        Align(
-                          alignment: Alignment.bottomRight,
-                          child: Button(
-                            item: CartItem(product: widget.product),
-                          ), // Your custom button
-                        ),
-                      ],
-                    ),
-                  ),
+                      )
+                      : SizedBox.shrink(),
                 ],
               ),
             ),
