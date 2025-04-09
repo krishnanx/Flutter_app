@@ -173,7 +173,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                         child: EditorsChoice(
                           title: products[index].title,
                           image: products[index].image,
-                          desc: products[index].description,
+
                           onTap: () {
                             Navigator.push(
                               context,
@@ -184,6 +184,8 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                               ),
                             );
                           },
+                          Width: 108,
+                          Height: 80,
                         ),
                       );
                     },

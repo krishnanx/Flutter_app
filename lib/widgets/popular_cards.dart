@@ -1,17 +1,24 @@
 import "package:flutter/material.dart";
+import "package:flutter_svg/svg.dart";
 import "package:flutter_task/widgets/button.dart";
 import '../models/product.dart';
 import "package:flutter_task/models/cart_item.dart";
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../providers/favorite_providers.dart';
 
-class PopularCards extends StatelessWidget {
+class PopularCards extends ConsumerStatefulWidget {
   final Product product;
   final VoidCallback onTap;
   const PopularCards({super.key, required this.product, required this.onTap});
+  ConsumerState<PopularCards> createState() => _PopularState();
+}
+
+class _PopularState extends ConsumerState<PopularCards> {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
     return GestureDetector(
-      onTap: onTap,
+      onTap: widget.onTap,
       child: Container(
         width: 200,
         height: 300,
@@ -25,20 +32,44 @@ class PopularCards extends StatelessWidget {
               padding: EdgeInsets.only(left: 10, right: 5),
               child: Column(
                 children: [
-                  Align(
-                    alignment: Alignment.center,
-                    child: Padding(
-                      padding: EdgeInsets.only(top: 20),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(15),
-                        child: Image.network(
-                          product.image,
-                          width: 168,
-                          height: 128,
-                          fit: BoxFit.fill,
+                  Stack(
+                    children: [
+                      Align(
+                        alignment: Alignment.center,
+                        child: Padding(
+                          padding: EdgeInsets.only(top: 20),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(15),
+                            child: Image.network(
+                              widget.product.image,
+                              width: 168,
+                              height: 128,
+                              fit: BoxFit.fill,
+                            ),
+                          ),
                         ),
                       ),
-                    ),
+                      GestureDetector(
+                        onTap:
+                            () => {
+                              ref
+                                  .read(favoriteProvider.notifier)
+                                  .toggleFavorite(widget.product),
+                            },
+                        child: Positioned(
+                          top: 15,
+                          right: 5,
+                          child: Container(
+                            // Optional: adds spacing inside the border
+                            child: SvgPicture.asset(
+                              "assets/icons/Love.svg",
+                              width: 60,
+                              height: 60,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
 
                   SizedBox(
@@ -48,7 +79,7 @@ class PopularCards extends StatelessWidget {
                       child: Padding(
                         padding: EdgeInsets.only(top: 20),
                         child: Text(
-                          product.title,
+                          widget.product.title,
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w800,
@@ -66,7 +97,7 @@ class PopularCards extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              "Cost: \$${product.price}",
+                              "Cost: \$${widget.product.price}",
                               style: TextStyle(
                                 fontSize: 15,
                                 fontWeight: FontWeight.w500,
@@ -78,7 +109,7 @@ class PopularCards extends StatelessWidget {
                         Align(
                           alignment: Alignment.bottomRight,
                           child: Button(
-                            item: CartItem(product: product),
+                            item: CartItem(product: widget.product),
                           ), // Your custom button
                         ),
                       ],

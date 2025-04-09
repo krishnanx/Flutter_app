@@ -30,3 +30,11 @@ final popularProductProvider = FutureProvider<List<Product>>((ref) async {
   allProducts.shuffle();
   return allProducts.take(4).toList();
 });
+final allProductsProvider = FutureProvider<List<Product>>((ref) async {
+  // Prevent this provider from being disposed
+  ref.keepAlive();
+
+  final api = ref.read(_productApiProvider);
+  final allProducts = await api.fetchAllProducts();
+  return allProducts;
+});
