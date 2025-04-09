@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import "package:flutter_task/models/product.dart";
 import "package:flutter_task/screens/cart.dart";
 import "package:flutter_task/widgets/feature_cards.dart";
 import "package:flutter_task/widgets/category_select.dart";
@@ -20,6 +21,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    categorySelect((category) {
+      setState(() {
+        selectedCategory = category;
+      });
+      print("Selected category: $selectedCategory");
+    });
     final featuredProducts = ref.watch(featuredProductsProvider);
     final popularProducts = ref.watch(
       categoryProductProvider(selectedCategory),
@@ -31,64 +38,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         flexibleSpace: SafeArea(
           child: Padding(
             padding: const EdgeInsets.only(top: 20.0, left: 16.0, right: 16.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                // User greeting
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Flexible(
-                      child: Row(
-                        children: [
-                          SvgPicture.asset(
-                            'assets/icons/Sun.svg',
-                            width: 18,
-                            height: 18,
-                          ),
-                          const SizedBox(width: 5),
-                          const Text(
-                            "Good Morning",
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w400,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const Text(
-                      "Krishnan E",
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.w800,
-                      ),
-                    ),
-                  ],
-                ),
-
-                // Cart Icon
-                GestureDetector(
-                  onTap: () {
-                    // Your action here (e.g., navigate to cart screen)
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (_) => Cart()),
-                    );
-                  },
-                  child: SvgPicture.asset(
-                    'assets/icons/Buy.svg',
-                    width: 24,
-                    height: 24,
-                  ),
-                ),
-              ],
-            ),
+            child: appbar(context),
           ),
         ),
       ),
 
-      // Body
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
         child: Column(
@@ -100,132 +54,190 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
             ),
             const SizedBox(height: 10),
-            SizedBox(
-              height: 172,
-              child: featuredProducts.when(
-                data:
-                    (products) => ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: products.length,
-                      itemBuilder: (context, index) {
-                        return Padding(
-                          padding: const EdgeInsets.only(right: 10),
-                          child: FeatureCards(
-                            title: products[index].title,
-                            image: products[index].image,
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder:
-                                      (_) => DetailsScreen(
-                                        product: products[index],
-                                      ),
-                                ),
-                              );
-                            },
-                          ),
-                        );
-                      },
-                    ),
-                loading: () => const Center(child: CircularProgressIndicator()),
-                error: (err, stack) => Center(child: Text("Error: $err")),
-              ),
-            ),
+
+            _featuredSpace(context, featuredProducts),
 
             const SizedBox(height: 40),
 
             // Category section
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: const [
-                Text(
-                  "Category",
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
-                ),
-                Text(
-                  "See All",
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w800,
-                    color: Color(0xFF70B9BE),
-                  ),
-                ),
-              ],
-            ),
+            categoryHeading(),
             const SizedBox(height: 10),
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                children: [
-                  CategorySelect(
-                    onCategorySelected: (category) {
-                      setState(() {
-                        selectedCategory = category;
-                      });
-                      print("Selected category: $selectedCategory");
-                    },
-                  ),
-                ],
-              ),
-            ),
+
+            categorySelect((category) {
+              setState(() {
+                selectedCategory = category;
+              });
+            }),
 
             const SizedBox(height: 30),
 
             // Popular Products section
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: const [
-                Text(
-                  "Popular Products",
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
-                ),
-                Text(
-                  "See All",
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w800,
-                    color: Color(0xFF70B9BE),
-                  ),
-                ),
-              ],
-            ),
+            _popularSpaceHeading(),
+
             const SizedBox(height: 10),
-            SizedBox(
-              height: 320,
-              child: popularProducts.when(
-                data:
-                    (products) => ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: products.length,
-                      itemBuilder: (context, index) {
-                        return Padding(
-                          padding: const EdgeInsets.only(right: 10),
-                          child: PopularCards(
-                            product: products[index],
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder:
-                                      (_) => DetailsScreen(
-                                        product: products[index],
-                                      ),
-                                ),
-                              );
-                            },
-                            showDetails: true,
-                          ),
-                        );
-                      },
-                    ),
-                loading: () => const Center(child: CircularProgressIndicator()),
-                error: (err, stack) => Center(child: Text("Error: $err")),
-              ),
-            ),
+
+            _popularSpace(context, popularProducts),
           ],
         ),
       ),
     );
   }
+}
+
+Widget appbar(BuildContext context) {
+  return Row(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: [
+      // User greeting
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Flexible(
+            child: Row(
+              children: [
+                SvgPicture.asset('assets/icons/Sun.svg', width: 18, height: 18),
+                const SizedBox(width: 5),
+                const Text(
+                  "Good Morning",
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
+                ),
+              ],
+            ),
+          ),
+          const Text(
+            "Krishnan E",
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.w800),
+          ),
+        ],
+      ),
+
+      // Cart Icon
+      GestureDetector(
+        onTap: () {
+          // Your action here (e.g., navigate to cart screen)
+          Navigator.push(context, MaterialPageRoute(builder: (_) => Cart()));
+        },
+        child: SvgPicture.asset('assets/icons/Buy.svg', width: 24, height: 24),
+      ),
+    ],
+  );
+}
+
+Widget _featuredSpace(
+  BuildContext context,
+  AsyncValue<List<Product>> featuredProducts,
+) {
+  return SizedBox(
+    height: 172,
+    child: featuredProducts.when(
+      data:
+          (products) => ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: products.length,
+            itemBuilder: (context, index) {
+              return Padding(
+                padding: const EdgeInsets.only(right: 10),
+                child: FeatureCards(
+                  title: products[index].title,
+                  image: products[index].image,
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => DetailsScreen(product: products[index]),
+                      ),
+                    );
+                  },
+                ),
+              );
+            },
+          ),
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (err, stack) => Center(child: Text("Error: $err")),
+    ),
+  );
+}
+
+Widget categoryHeading() {
+  return Row(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: const [
+      Text(
+        "Category",
+        style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
+      ),
+      Text(
+        "See All",
+        style: TextStyle(
+          fontSize: 14,
+          fontWeight: FontWeight.w800,
+          color: Color(0xFF70B9BE),
+        ),
+      ),
+    ],
+  );
+}
+
+Widget categorySelect(void Function(String) onCategorySelected) {
+  return SingleChildScrollView(
+    scrollDirection: Axis.horizontal,
+    child: Row(
+      children: [CategorySelect(onCategorySelected: onCategorySelected)],
+    ),
+  );
+}
+
+Widget _popularSpaceHeading() {
+  return Row(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: const [
+      Text(
+        "Popular Products",
+        style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
+      ),
+      Text(
+        "See All",
+        style: TextStyle(
+          fontSize: 14,
+          fontWeight: FontWeight.w800,
+          color: Color(0xFF70B9BE),
+        ),
+      ),
+    ],
+  );
+}
+
+Widget _popularSpace(
+  BuildContext context,
+  AsyncValue<List<Product>> popularProducts,
+) {
+  return SizedBox(
+    height: 320,
+    child: popularProducts.when(
+      data:
+          (products) => ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: products.length,
+            itemBuilder: (context, index) {
+              return Padding(
+                padding: const EdgeInsets.only(right: 10),
+                child: PopularCards(
+                  product: products[index],
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => DetailsScreen(product: products[index]),
+                      ),
+                    );
+                  },
+                  showDetails: true,
+                ),
+              );
+            },
+          ),
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (err, stack) => Center(child: Text("Error: $err")),
+    ),
+  );
 }
