@@ -49,23 +49,31 @@ class _PopularState extends ConsumerState<PopularCards> {
                           ),
                         ),
                       ),
-                      GestureDetector(
-                        onTap:
-                            () => {
-                              ref
-                                  .read(favoriteProvider.notifier)
-                                  .toggleFavorite(widget.product),
-                            },
-                        child: Positioned(
-                          top: 15,
-                          right: 5,
+                      Positioned(
+                        top: 15,
+                        right: 5,
+                        child: GestureDetector(
+                          onTap:
+                              () => {
+                                ref
+                                    .read(favoriteProvider.notifier)
+                                    .toggleFavorite(widget.product),
+                              },
                           child: Container(
-                            // Optional: adds spacing inside the border
-                            child: SvgPicture.asset(
-                              "assets/icons/Love.svg",
-                              width: 60,
-                              height: 60,
-                            ),
+                            child:
+                                ref
+                                        .read(favoriteProvider.notifier)
+                                        .isFavorite(widget.product)
+                                    ? SvgPicture.asset(
+                                      "assets/icons/Active.svg",
+                                      width: 60,
+                                      height: 60,
+                                    )
+                                    : SvgPicture.asset(
+                                      "assets/icons/Love.svg",
+                                      width: 60,
+                                      height: 60,
+                                    ),
                           ),
                         ),
                       ),

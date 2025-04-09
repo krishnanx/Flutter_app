@@ -61,9 +61,11 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             ),
           ),
           body: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 18.0,
-              vertical: 20.0,
+            padding: const EdgeInsets.only(
+              left: 18.0,
+              right: 18.0,
+              top: 20,
+              bottom: 60,
             ),
             child: Column(
               children: [
@@ -101,7 +103,7 @@ Widget _accDisplay() {
 Widget _favouritesHeading(BuildContext context) {
   return SizedBox(
     width: MediaQuery.of(context).size.width * 0.9,
-    height: 200,
+    height: 40,
     child: Column(
       children: [
         Row(
@@ -130,18 +132,22 @@ Widget _favourites(BuildContext context, List<Product> favoriteProducts) {
   if (favoriteProducts.isEmpty) {
     return const Text("No favorites yet!");
   }
-
   return SizedBox(
-    width: MediaQuery.of(context).size.width * 0.9,
-    height: 200, // Add a fixed height if using horizontal ListView
-    child: ListView.builder(
-      scrollDirection: Axis.horizontal,
+    // or MediaQuery.of(context).size.height * 0.5, etc.
+    child: GridView.builder(
+      shrinkWrap: true,
+      physics: NeverScrollableScrollPhysics(),
+      padding: EdgeInsets.all(0),
       itemCount: favoriteProducts.length,
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        crossAxisSpacing: 16,
+        mainAxisSpacing: 16,
+        childAspectRatio: 0.75,
+      ),
       itemBuilder: (context, index) {
-        return Padding(
-          padding: const EdgeInsets.only(right: 10),
-          child: PopularCards(product: favoriteProducts[index], onTap: () {}),
-        );
+        final item = favoriteProducts[index];
+        return PopularCards(product: item, onTap: () {});
       },
     ),
   );
