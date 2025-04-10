@@ -18,6 +18,40 @@ class _DetailsScreenState extends State<DetailsScreen> {
   int quantity = 1;
   bool _isExpanded = false;
 
+  double? imageHeight; // dynamic height based on original dimensions
+  final double targetWidth = 300.0;
+
+  @override
+  void initState() {
+    super.initState();
+    _getImageDimensions();
+  }
+
+  void _getImageDimensions() {
+    final Image image = Image.network(widget.product.image);
+
+    image.image
+        .resolve(ImageConfiguration())
+        .addListener(
+          ImageStreamListener((ImageInfo info, bool _) {
+            final double originalWidth = info.image.width.toDouble();
+            final double originalHeight = info.image.height.toDouble();
+
+            final double calculatedHeight =
+                originalHeight * (targetWidth / originalWidth);
+
+            setState(() {
+              imageHeight = calculatedHeight;
+            });
+
+            print("Original: $originalWidth x $originalHeight");
+            print(
+              "Calculated height for width $targetWidth: $calculatedHeight",
+            );
+          }),
+        );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,17 +62,28 @@ class _DetailsScreenState extends State<DetailsScreen> {
             return Stack(
               children: [
                 // Image that shrinks
-                AnimatedContainer(
-                  duration: Duration(milliseconds: 100),
-                  height: 400 * imageHeightFactor, // max height
-                  width: double.infinity,
-                  child: Image.network(widget.product.image, fit: BoxFit.fill),
+                Padding(
+                  padding: EdgeInsets.only(top: 30),
+                  child: AnimatedContainer(
+                    duration: Duration(milliseconds: 100),
+                    height:
+                        (imageHeight != null)
+                            ? imageHeight! * imageHeightFactor
+                            : 300, // temporary fixed height
+                    width: double.infinity,
+                    child:
+                        (imageHeight != null)
+                            ? Image.network(
+                              widget.product.image,
+                              fit: BoxFit.contain,
+                              width: targetWidth,
+                            )
+                            : Center(child: CircularProgressIndicator()),
+                  ),
                 ),
-
                 // Draggable Scrollable Sheet
                 NotificationListener<DraggableScrollableNotification>(
                   onNotification: (notification) {
-                    // shrink image between 1.0 and 0.6 factor
                     setState(() {
                       double shrink = 1.0 - ((notification.extent - 0.5) * 1.5);
                       imageHeightFactor = shrink.clamp(0.7, 1.0);
