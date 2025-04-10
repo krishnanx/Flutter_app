@@ -8,12 +8,12 @@ class AuthStack extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Navigator(
-      initialRoute: '/signin',
+      initialRoute: '/',
       onGenerateRoute: (RouteSettings settings) {
         WidgetBuilder builder;
 
         switch (settings.name) {
-          case '/signin':
+          case '/':
             builder = (BuildContext _) => const SignIn();
             break;
 
