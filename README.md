@@ -26,10 +26,15 @@ Future Implementation: User authentication, order history tracking, payment gate
     flutter build apk --release
   ```
 ## Dependencies used
-  - flutter:	Core SDK for building cross-platform apps using Dart
-  - flutter_riverpod:	Robust and scalable state management solution
-  - dio:	Powerful HTTP client for making API requests
-  - flutter_svg:	Renders SVG images directly in Flutter widgets
+  - flutter:	Core SDK for building cross-platform apps using Dart.
+  - flutter_riverpod:	Robust and scalable state management solution.
+  - dio:	Powerful HTTP client for making API requests.
+  - flutter_svg:	Renders SVG images directly in Flutter widgets.
+
+## State Management Approach
+  This project uses Riverpod for state management. Even though it is similar to the Provider state mangement,
+  Riverpod is selected for its Async support where it provides FutureProvider and StreamProvider to handle API calls and real-time data.
+  
 ## Tech Stack
   - Flutter
   - Riverpod
