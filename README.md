@@ -25,7 +25,11 @@ Future Implementation: User authentication, order history tracking, payment gate
   ```bash
     flutter build apk --release
   ```
-
+## Dependencies used
+  - flutter:	Core SDK for building cross-platform apps using Dart
+  - flutter_riverpod:	Robust and scalable state management solution
+  - dio:	Powerful HTTP client for making API requests
+  - flutter_svg:	Renders SVG images directly in Flutter widgets
 ## Tech Stack
   - Flutter
   - Riverpod
