@@ -9,7 +9,7 @@ class Signup extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // Accessing the provider value using ref.watch
-    final auth = ref.watch(authProvider);
+    //final auth = ref.watch(authProvider);
     final userIdController = TextEditingController();
     final usernameController = TextEditingController();
     final emailController = TextEditingController();

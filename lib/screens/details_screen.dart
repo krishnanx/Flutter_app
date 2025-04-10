@@ -16,6 +16,8 @@ class DetailsScreen extends StatefulWidget {
 class _DetailsScreenState extends State<DetailsScreen> {
   double imageHeightFactor = 1.0;
   int quantity = 1;
+  bool _isExpanded = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,10 +46,21 @@ class _DetailsScreenState extends State<DetailsScreen> {
                     return true;
                   },
                   child: DraggableScrollableSheet(
-                    initialChildSize: 0.6,
+                    initialChildSize: 0.7,
                     minChildSize: 0.6,
                     maxChildSize: 0.9,
                     builder: (context, scrollController) {
+                      final descriptionItems =
+                          widget.product.description
+                              .split(';')
+                              .where((item) => item.trim().isNotEmpty)
+                              .toList();
+
+                      final displayedItems =
+                          _isExpanded
+                              ? descriptionItems
+                              : descriptionItems.take(3).toList();
+
                       return Container(
                         padding: EdgeInsets.symmetric(
                           horizontal: 16,
@@ -91,54 +104,57 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                 ),
                               ),
                               SizedBox(height: 20),
-                              ConstrainedBox(
-                                constraints: BoxConstraints(
-                                  minHeight:
-                                      150, // set your desired minimum height
-                                ),
-                                child: IntrinsicHeight(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children:
-                                        widget.product.description
-                                            .split(';')
-                                            .where(
-                                              (item) => item.trim().isNotEmpty,
-                                            )
-                                            .map(
-                                              (item) => Padding(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                      vertical: 2,
-                                                    ),
-                                                child: Row(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      "• ",
-                                                      style: TextStyle(
-                                                        fontSize: 14,
-                                                      ),
-                                                    ),
-                                                    Expanded(
-                                                      child: Text(
-                                                        item.trim(),
-                                                        style: TextStyle(
-                                                          fontSize: 14,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            )
-                                            .toList(),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  ...displayedItems.map(
+                                    (item) => Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 2,
+                                      ),
+                                      child: Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            "• ",
+                                            style: TextStyle(fontSize: 14),
+                                          ),
+                                          Expanded(
+                                            child: Text(
+                                              item.trim(),
+                                              style: TextStyle(fontSize: 14),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
                                   ),
-                                ),
+                                  if (descriptionItems.length > 3)
+                                    GestureDetector(
+                                      onTap: () {
+                                        setState(() {
+                                          _isExpanded = !_isExpanded;
+                                        });
+                                      },
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(
+                                          top: 4.0,
+                                        ),
+                                        child: Text(
+                                          _isExpanded
+                                              ? 'Show less'
+                                              : 'Read more...',
+                                          style: TextStyle(
+                                            color: Colors.blue,
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                ],
                               ),
-
                               SizedBox(height: 20),
                               Row(
                                 mainAxisAlignment:
@@ -161,8 +177,8 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                         },
                                         child: SvgPicture.asset(
                                           'assets/icons/minus.svg',
-                                          width: 24,
-                                          height: 24,
+                                          width: 30,
+                                          height: 30,
                                         ),
                                       ),
                                       Padding(
@@ -185,8 +201,8 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                         },
                                         child: SvgPicture.asset(
                                           'assets/icons/plus.svg',
-                                          width: 24,
-                                          height: 24,
+                                          width: 30,
+                                          height: 30,
                                         ),
                                       ),
                                     ],
