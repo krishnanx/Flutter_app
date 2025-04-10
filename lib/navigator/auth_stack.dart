@@ -1,6 +1,6 @@
 // lib/navigation/auth_stack.dart
 import 'package:flutter/material.dart';
-import 'package:flutter_task/screens/sign_in.dart'; // Adjust path if needed
+import 'package:flutter_task/screens/InitialPage.dart'; // Adjust path if needed
 
 class AuthStack extends StatelessWidget {
   const AuthStack({super.key});
@@ -14,7 +14,7 @@ class AuthStack extends StatelessWidget {
 
         switch (settings.name) {
           case '/':
-            builder = (BuildContext _) => const SignIn();
+            builder = (BuildContext _) => const Initialpage();
             break;
 
           // You can add more routes later like:

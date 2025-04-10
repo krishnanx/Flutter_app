@@ -17,6 +17,7 @@ class SearchScreen extends ConsumerStatefulWidget {
 
 class _SearchScreenState extends ConsumerState<SearchScreen> {
   String selectedCategory = "electronics";
+  final searchController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +51,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
             SizedBox(
               width: MediaQuery.of(context).size.width * 0.9,
               height: 55,
-              child: const Search(),
+              child: Search(controller: searchController),
             ),
             const SizedBox(height: 20),
 

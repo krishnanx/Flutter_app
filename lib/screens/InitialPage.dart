@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_task/screens/signup.dart';
 import '../providers/Auth_provider.dart';
 
-class SignIn extends ConsumerWidget {
-  const SignIn({super.key});
+class Initialpage extends ConsumerWidget {
+  const Initialpage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -64,7 +65,7 @@ class SignIn extends ConsumerWidget {
                   // Login button
                   ElevatedButton(
                     onPressed: () {
-                      ref.read(authProvider.notifier).signIn();
+                      ref.read(authProvider.notifier).toggleAuth();
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF003C39),
@@ -88,7 +89,12 @@ class SignIn extends ConsumerWidget {
 
                   // Create account button
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => Signup()),
+                      );
+                    },
                     style: TextButton.styleFrom(
                       foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(vertical: 8),

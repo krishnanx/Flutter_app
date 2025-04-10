@@ -2,24 +2,37 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class Search extends StatelessWidget {
-  const Search({super.key});
+  final String? placeholder;
+  final bool? icon;
+  final TextEditingController controller; // Add a controller for text input
+
+  const Search({
+    super.key,
+    this.icon = true,
+    this.placeholder = 'search',
+    required this.controller,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+      padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 10),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(15),
         border: Border.all(color: Colors.grey.shade300, width: 1),
       ),
       child: Row(
         children: [
-          SvgPicture.asset('assets/icons/Search.svg', height: 40),
+          icon != null && icon == true
+              ? SvgPicture.asset('assets/icons/Search.svg', height: 40)
+              : SizedBox(width: 15),
           Expanded(
             child: TextField(
-              decoration: const InputDecoration(
-                hintText: 'Search',
+              controller:
+                  controller, // Use the controller to capture text input
+              decoration: InputDecoration(
+                hintText: placeholder,
                 border: InputBorder.none,
                 isDense: true,
               ),
