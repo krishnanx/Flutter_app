@@ -23,7 +23,7 @@ Future Implementation: User authentication, order history tracking, payment gate
   ```
 ## To get apk
   ```bash
-    flutter build apk --Release
+    flutter build apk --release
   ```
 
 ## Tech Stack
