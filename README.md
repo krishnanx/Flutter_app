@@ -42,7 +42,6 @@ Future Implementation: User authentication, order history tracking, payment gate
   - Dart
 
 ## Demo Video
-  - The project is deployed using Vercel
   - [https://youtube.com/shorts/tdLRFUfpZV4](https://youtube.com/shorts/tdLRFUfpZV)
 
 
