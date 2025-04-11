@@ -1,16 +1,49 @@
-# flutter_task
+# Junior Flutter Developer Task | Lascade
 
-A new Flutter project.
+This project is a "mobile e-commerce application" built using Flutter, showcasing integration with the Fake Store API to display product listings, details, and cart functionalities.
 
-## Getting Started
+The app retrieves product data dynamically from the API and presents it in a clean, responsive UI. State management is handled using Riverpod, enabling a scalable and reactive architecture with clear separation of logic and UI.
 
-This project is a starting point for a Flutter application.
+Future Implementation: User authentication, order history tracking, payment gateway integration, and persistent local cart using shared preferences or Hive.
 
-A few resources to get you started if this is your first Flutter project:
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## Instruction to run locally
+  ```bash
+    git clone https://github.com/krishnanx/Flutter_app.git
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+  ```
+  ```bash
+    cd Flutter_app
+  ```
+  ```bash
+    flutter pub get  
+  ```
+  ```bash
+    flutter run
+  ```
+## To get apk
+  ```bash
+    flutter build apk --release
+  ```
+## Dependencies used
+  - flutter:	Core SDK for building cross-platform apps using Dart.
+  - flutter_riverpod:	Robust and scalable state management solution.
+  - dio:	Powerful HTTP client for making API requests.
+  - flutter_svg:	Renders SVG images directly in Flutter widgets.
+
+## State Management Approach
+  This project uses Riverpod for state management. Even though it is similar to the Provider state mangement,
+  Riverpod is selected for its Async support where it provides FutureProvider and StreamProvider to handle API calls and real-time data.
+  
+## Tech Stack
+  - Flutter
+  - Riverpod
+  - Dios
+  - Dart
+
+
+
+
+
+
+
