@@ -42,7 +42,7 @@ Future Implementation: User authentication, order history tracking, payment gate
   - Dart
 
 ## Demo Video
-  - [https://youtube.com/shorts/tdLRFUfpZV4](https://youtube.com/shorts/tdLRFUfpZV)
+  - [https://youtube.com/shorts/tdLRFUfpZV4](https://youtube.com/shorts/tdLRFUfpZV4)
 
 
 
