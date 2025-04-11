@@ -8,6 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../screens/details_screen.dart';
 import "package:flutter_task/providers/product_providers.dart";
 import "package:flutter_task/widgets/popular_cards.dart";
+import 'package:another_flushbar/flushbar.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -21,6 +22,23 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    bool _errorShown = false;
+    void _showErrorFlushbar(BuildContext context, String message) {
+      if (_errorShown) return;
+
+      _errorShown = true;
+
+      Flushbar(
+        message: message,
+        flushbarPosition: FlushbarPosition.TOP,
+        margin: const EdgeInsets.all(16),
+        borderRadius: BorderRadius.circular(8),
+        backgroundColor: Colors.red.shade400,
+        duration: const Duration(seconds: 3),
+        icon: const Icon(Icons.error_outline, color: Colors.white),
+      ).show(context);
+    }
+
     categorySelect((category) {
       setState(() {
         selectedCategory = category;
@@ -55,7 +73,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             ),
             const SizedBox(height: 10),
 
-            _featuredSpace(context, featuredProducts),
+            _featuredSpace(
+              context,
+              featuredProducts,
+              _showErrorFlushbar,
+              _errorShown,
+            ),
 
             const SizedBox(height: 40),
 
@@ -70,13 +93,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             }),
 
             const SizedBox(height: 30),
-
-            // Popular Products section
             _popularSpaceHeading(),
 
+            // Popular Products section
             const SizedBox(height: 10),
 
-            _popularSpace(context, popularProducts),
+            _popularSpace(
+              context,
+              popularProducts,
+              _showErrorFlushbar,
+              _errorShown,
+            ),
           ],
         ),
       ),
@@ -126,6 +153,8 @@ Widget appbar(BuildContext context) {
 Widget _featuredSpace(
   BuildContext context,
   AsyncValue<List<Product>> featuredProducts,
+  void Function(BuildContext, String) showErrorFlushbar,
+  bool errorShown,
 ) {
   return SizedBox(
     height: 172,
@@ -153,7 +182,12 @@ Widget _featuredSpace(
             },
           ),
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (err, stack) => Center(child: Text("Error: $err")),
+      error: (err, stack) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          showErrorFlushbar(context, "Check your network");
+        });
+        return const Center(child: Text("Something went wrong"));
+      },
     ),
   );
 }
@@ -210,6 +244,8 @@ Widget _popularSpaceHeading() {
 Widget _popularSpace(
   BuildContext context,
   AsyncValue<List<Product>> popularProducts,
+  void Function(BuildContext, String) showErrorFlushbar,
+  bool errorShown,
 ) {
   return SizedBox(
     height: 320,
@@ -223,6 +259,7 @@ Widget _popularSpace(
                 padding: const EdgeInsets.only(right: 10),
                 child: PopularCards(
                   product: products[index],
+                  showDetails: true,
                   onTap: () {
                     Navigator.push(
                       context,
@@ -231,13 +268,18 @@ Widget _popularSpace(
                       ),
                     );
                   },
-                  showDetails: true,
                 ),
               );
             },
           ),
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (err, stack) => Center(child: Text("Error: $err")),
+      error: (err, stack) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          showErrorFlushbar(context, "Check your network");
+        });
+
+        return const Center(child: Text("Something went wrong"));
+      },
     ),
   );
 }

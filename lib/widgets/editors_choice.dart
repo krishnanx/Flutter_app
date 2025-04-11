@@ -48,8 +48,21 @@ class EditorsChoice extends StatelessWidget {
                   width: Width,
                   height: Height,
                   fit: BoxFit.fill,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Container(
+                      width: Width,
+                      height: Height,
+                      color: Colors.grey.shade200,
+                      child: Icon(
+                        Icons.person,
+                        size: Width * 0.6,
+                        color: Colors.grey,
+                      ),
+                    );
+                  },
                 ),
               ),
+
               SizedBox(width: 10),
               Expanded(
                 child: Column(

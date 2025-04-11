@@ -7,6 +7,7 @@ import "package:flutter_task/providers/product_providers.dart";
 import 'package:flutter_task/widgets/editors_choice.dart';
 import 'package:flutter_task/screens/details_screen.dart';
 import 'package:flutter_task/models/product.dart';
+import 'package:another_flushbar/flushbar.dart';
 
 class SearchScreen extends ConsumerStatefulWidget {
   const SearchScreen({super.key});
@@ -25,6 +26,23 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
       categoryProductProvider(selectedCategory),
     );
     final editorsChoice = ref.watch(categoryProductProvider(selectedCategory));
+    bool _errorShown = false;
+    void _showErrorFlushbar(BuildContext context, String message) {
+      if (_errorShown) return;
+
+      _errorShown = true;
+
+      Flushbar(
+        message: message,
+        flushbarPosition: FlushbarPosition.TOP,
+        margin: const EdgeInsets.all(16),
+        borderRadius: BorderRadius.circular(8),
+        backgroundColor: Colors.red.shade400,
+        duration: const Duration(seconds: 3),
+        icon: const Icon(Icons.error_outline, color: Colors.white),
+      ).show(context);
+    }
+
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 80,
@@ -72,16 +90,20 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
               ),
             ),
             SizedBox(height: 20),
-            _popular(popularProducts),
+            _popular(popularProducts, _showErrorFlushbar, _errorShown),
             SizedBox(height: 40),
-            _editors(editorsChoice),
+            _editors(editorsChoice, _showErrorFlushbar, _errorShown),
           ],
         ),
       ),
     );
   }
 
-  Widget _popular(AsyncValue<List<Product>> popularProducts) {
+  Widget _popular(
+    AsyncValue<List<Product>> popularProducts,
+    void Function(BuildContext, String) showErrorFlushbar,
+    bool errorShown,
+  ) {
     return Column(
       children: [
         Row(
@@ -131,7 +153,13 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                     },
                   ),
               loading: () => const Center(child: CircularProgressIndicator()),
-              error: (err, stack) => Center(child: Text("Error: $err")),
+
+              error: (err, stack) {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  showErrorFlushbar(context, "Check your network");
+                });
+                return const Center(child: Text("Something went wrong"));
+              },
             ),
           ),
         ),
@@ -139,7 +167,11 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
     );
   }
 
-  Widget _editors(AsyncValue<List<Product>> editorsChoice) {
+  Widget _editors(
+    AsyncValue<List<Product>> editorsChoice,
+    void Function(BuildContext, String) showErrorFlushbar,
+    bool errorShown,
+  ) {
     return (Column(
       children: [
         Row(
@@ -192,7 +224,13 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                     },
                   ),
               loading: () => const Center(child: CircularProgressIndicator()),
-              error: (err, stack) => Center(child: Text("Error: $err")),
+
+              error: (err, stack) {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  showErrorFlushbar(context, "Check your network");
+                });
+                return const Center(child: Text("Something went wrong"));
+              },
             ),
           ),
         ),

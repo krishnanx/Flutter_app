@@ -19,66 +19,66 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     final favoriteProductIds = ref.watch(favoriteProvider);
     final allProductsAsync = ref.watch(allProductsProvider);
 
-    return allProductsAsync.when(
-      loading: () => const Center(child: CircularProgressIndicator()),
-      error: (err, stack) => Center(child: Text("Error: $err")),
-      data: (allProducts) {
-        final favoriteProducts =
-            allProducts
-                .where((product) => favoriteProductIds.contains(product.id))
-                .toList();
-
-        return Scaffold(
-          appBar: AppBar(
-            toolbarHeight: 80,
-            flexibleSpace: SafeArea(
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20),
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        "Account",
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                    ),
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: SvgPicture.asset(
-                        "assets/icons/Setting.svg",
-                        width: 20,
-                        height: 21,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          body: SingleChildScrollView(
-            padding: const EdgeInsets.only(
-              left: 18.0,
-              right: 18.0,
-              top: 20,
-              bottom: 60,
-            ),
-            child: Column(
+    return Scaffold(
+      appBar: AppBar(
+        toolbarHeight: 80,
+        flexibleSpace: SafeArea(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            child: Stack(
+              alignment: Alignment.center,
               children: [
-                _accDisplay(),
-                SizedBox(height: 30),
-                _favouritesHeading(context),
-                SizedBox(height: 20),
-                _favourites(context, favoriteProducts),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    "Account",
+                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.w700),
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: SvgPicture.asset(
+                    "assets/icons/Setting.svg",
+                    width: 20,
+                    height: 21,
+                  ),
+                ),
               ],
             ),
           ),
-        );
-      },
+        ),
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.only(
+          left: 18.0,
+          right: 18.0,
+          top: 20,
+          bottom: 60,
+        ),
+        child: Column(
+          children: [
+            _accDisplay(),
+            SizedBox(height: 30),
+            _favouritesHeading(context),
+            SizedBox(height: 20),
+            allProductsAsync.when(
+              loading: () => const CircularProgressIndicator(),
+              error: (err, stack) {
+                return const Center(child: Text("Error loading favorites"));
+              },
+              data: (allProducts) {
+                final favoriteProducts =
+                    allProducts
+                        .where(
+                          (product) => favoriteProductIds.contains(product.id),
+                        )
+                        .toList();
+                return _favourites(context, favoriteProducts);
+              },
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
